@@ -26,14 +26,14 @@
 
 // // Activar el servidor a escucha en un puerto
 
-// server.listen(7667)
+// server.listen(8080)
 
 // ------------------- Servidor 2: Más Compacto-------------------------------
 
 // const http = require('http');
 
 // //-- Definir el puerto escucha
-// const PUERTO = 7667;
+// const PUERTO = 8080;
 
 // //-- Función de retrollamada de petición recibida
 // function atender(req, res) {
@@ -54,7 +54,7 @@
 // ------------------ SERVIDOR 3:  Definiendo el callback en createServer --------------------------------
 
 // const http = require('http')
-// const PUERTO = 7667
+// const PUERTO = 8080
 
 // const server = http.createServer((req,res) =>{
 //     console.log("Peticion recibida")
@@ -68,8 +68,36 @@
 // ------------------------- Servidor 4: Happy server: Enviando respuesta -------------------------------------
 
 
+// const http = require('http')
+// const PUERTO = 8080
+
+// const server = http.createServer((req,res) => {
+//     console.log('Peticion recibida')
+
+//     res.write('Soy el Happy Server!\n')
+//     res.end()
+// })
 
 
+// server.listen(PUERTO)
+// console.log('Happy Server activado. Escuchando en el puerto ' + PUERTO)
 
 
+// --------------------------------Servidor 5: Happy server: Añadiendo cabeceras------------------------------------
 
+
+const http = require('http')
+const PUERTO = 8080
+
+const server = http.createServer((req,res) => {
+    console.log('Peticion recibida')
+
+    res.setHeader('Content-Type', 'text/plain')
+
+    res.write('Soy el Happy Server!\n')
+    res.end()
+})
+
+
+server.listen(PUERTO)
+console.log('Happy Server activado. Escuchando en el puerto ' + PUERTO)
