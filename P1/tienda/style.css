@@ -57,6 +57,17 @@ p{
 
 }
 
+.error{
+    min-width: 300px;
+    text-align: center;
+    font-size: 30px;
+    text-align: center;
+    line-height: 200px;
+    margin: 25px 0;
+
+}
+
+
 .col-3{
     flex: 30%;
     min-width: 250px;

@@ -58,7 +58,10 @@ const server = http.createServer(function (req, res) {
 
         if (err){
         //Lanza error TODO
-            console.log("ERROR ")
+            res.writeHead(404,{'Content-Type': mime});
+            console.log("Not Found")
+            petition = "./tienda/error.html"
+            data =fs.readFileSync(petition)
         } else {
             res.writeHead(200, {'Content-Type': mime});
             console.log("Petición aceptada, 200 OK!");
@@ -69,6 +72,7 @@ const server = http.createServer(function (req, res) {
         });
 
 });
+
 
 
 server.listen(PUERTO);
