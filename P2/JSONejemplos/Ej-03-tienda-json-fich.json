@@ -1,0 +1,11 @@
+[
+    {
+        "nombre": "test1",
+        "descripcion": "Test JSON",
+        "Stock": 3
+    },
+    {
+        "nombre": "test2",
+        "stock": 10
+    }
+]
