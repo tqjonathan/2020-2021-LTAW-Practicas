@@ -1,0 +1,1 @@
+{"productos":[{"nombre":"Iron Maiden","descripcion":"Camiseta Iron Maiden","stock":18},{"nombre":"Chicago Bulls","descripcion":"Camiseta Chicago Bulls","stock":18},{"nombre":"Led Zepellin","descripcion":"Camiseta Led Zepellin","tock":10,"stock":7}],"usuarios":[{"nombre":"Pepe"},{"nombre":"Paco"}],"pedidos":[{"usuario":"Pepe","producto":"Iron Maiden","cantidad":2}]}
