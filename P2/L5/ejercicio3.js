@@ -20,3 +20,4 @@ let myJSON = JSON.stringify(tienda);
 fs.writeFileSync(FICHERO_JSON, myJSON);
 
 console.log("Información guardada en el fichero: " + FICHERO_JSON)
+
