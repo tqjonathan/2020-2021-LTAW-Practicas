@@ -40,6 +40,8 @@ console.log("\nNúmero de pedidos: " + tienda.pedidos.length);
 tienda.pedidos.forEach((element,index) => {
     console.log("Pedido " + (index+1) + ": " + 
     "\nUsuario: " + element.usuario + 
+    "\nDireccion: " + element.direccion + 
+    "\nNº Tarjeta: " + element.ntarjeta + 
     "\nProducto: " + element.producto +
     "\nCantidad: " + element.cantidad)
 });
