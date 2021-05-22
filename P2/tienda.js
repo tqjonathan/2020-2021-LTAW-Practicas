@@ -174,8 +174,15 @@ const server = http.createServer(function (req, res) {
         content = PRODUCTO3;
 
     }else if (myURL.pathname == '/login'){
-        
 
+        // Comprobar si existen cookies referente a un usuario - Las carga, o les envia el formulario de login
+        if (user) {
+            console.log("User Ya Logeado")
+
+        }else{
+            content = LOGIN
+        }
+        extension = "html";
     }else{
 
         extension = myURL.pathname.split('.')[1]
