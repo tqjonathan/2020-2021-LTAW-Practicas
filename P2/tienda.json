@@ -1,8 +1,59 @@
-{"productos":[{"nombre":"Iron Maiden","descripcion":"Camiseta Iron Maiden","stock":20},{"nombre":"Chicago Bulls","descripcion":"Camiseta Chicago Bulls","stock":20},{"nombre":"Led Zepellin","descripcion":"Camiseta Led Zepellin","stock":9}],
-"usuarios":[{"nombre":"Pepe"},{"nombre":"root"}],
-"pedidos":[{
-    "usuario":"Pepe",
-    "direccion": "calle x",
-    "ntarjeta": 12345,
-    "producto":"Iron Maiden",
-    "cantidad":1}]}
+[
+    {
+        "productos":[
+                        {
+                            "nombre": "Iron Maiden",
+                            "descripcion": "Camiseta Iron Maiden. Talla M", 
+                            "precio": 20,
+                            "stock": 10
+                        },
+                        {
+                            "nombre": "Chicago Bulls",
+                            "descripcion": "Camiseta Chicago Bulls. Talla M", 
+                            "precio": 20,
+                            "stock": 10
+                        },
+                        {
+                            "nombre": "Led Zepellin",
+                            "descripcion": "Camiseta Led Zepellin. Talla M", 
+                            "precio": 20,
+                            "stock": 10
+                        }
+                    ]
+    },
+    {
+        "usuarios": [
+                        {
+                            "usuario":"pepe",
+                            "nombre": "Jose Perez", 
+                            "email": "pepe@perez.com", 
+                            "password": "pepe123"
+                        },
+                        {
+                            "usuario":"root", 
+                            "nombre": "Root Root", 
+                            "email": "root@root.com", 
+                            "password": "root123"
+                        }
+                    ]
+    },
+    {
+        "pedidos":  [
+                        {
+                            "usuario":"pepe",
+                            "direccion": "calle falsa 123",
+                            "tarjeta": 12345,
+                            "carrito":  [
+                                            {
+                                                "producto": "Chicago Bulls",
+                                                "cantidad": 1
+                                            },
+                                            {
+                                                "producto": "Iron Maiden",
+                                                "cantidad": 1
+                                            }
+                                        ]
+                        }
+                    ]
+    }
+]
