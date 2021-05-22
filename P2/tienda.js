@@ -1,4 +1,4 @@
-// PRACTICA 1.
+// PRACTICA 2
 
 //Importo los modulos 
 const http = require('http')
@@ -8,6 +8,14 @@ const url = require('url')
 //Defino el puerto que voy a utilizar
 const PUERTO = 9000;
 
+
+// VARIABLES ****
+
+//-- Variable pagina principal
+let main_pag;
+
+//-- Contenido solicitado
+let content; 
 
 //-- Definir los tipos de mime
 const mime_type = {
@@ -23,6 +31,7 @@ const mime_type = {
     "json" : "application/json",
     "ttf"  : "font/ttf"
   };
+
 // Pagina principal
 const MAIN = fs.readFileSync('./tienda/home.html', 'utf-8');
 // Error 404
@@ -98,82 +107,121 @@ for (i=0; i<productos.length; i++){
     descripcion.push(item[descr])
     precio.push(item[valor])
 }
-console.log(productos_json)
-console.log(descripcion)
-console.log(precio)
+// console.log(productos_json)
+// console.log(descripcion)
+// console.log(precio)
 
 
 
 
+// +++++++ Creo el sevidor +++++++++++++++++
+
+const server = http.createServer(function (req, res) {
+
+    console.log("\nPeticion Recibida");
+
+
+//   //-- Leer la Cookie recibida y mostrarla en la consola
+//   const cookie = req.headers.cookie;
+
+//   //-- Variable para guardar el usuario
+//   let user;
+
+//   //-- Variable para guardar el carrito
+//   let carrito;
+
+
+
+    //Construyo la url de la solicitud 
+    const url = new URL(req.url, 'http://' + req.headers['host']);
+        console.log("\nSe ha solicitado el recurso: " + url.pathname);
 
 
 
 
+      //-- Leer los parámetros
+    let nombre = myURL.searchParams.get('nombre');
+    let password = myURL.searchParams.get('password');
+    let direccion = myURL.searchParams.get('direccion');
+    let tarjeta = myURL.searchParams.get('tarjeta');
+    console.log(" Nombre usuario: " + nombre);
+    console.log(" Password: " + password);
+    console.log(" Direccion de envio: " + direccion);
+    console.log(" Numero de Tarjeta de credito: " + tarjeta);
 
-// //Creo el sevidor
-// const server = http.createServer(function (req, res) {
 
-//     console.log("Peticion Recibida");
 
-//     //Construyo la url de la solicitud 
-//     const url = new URL(req.url, 'http://' + req.headers['host']);
-//         console.log("\nSe ha solicitado el recurso: " + url.pathname);
+    // ************ ACCESO A LAS PETICIONES *****************
 
-//     // Variable peticion
-//     let peticion = '';
+
+    if(myURL.pathname == '/'){
+
+        content = MAIN;     
+        main_pag = content;
+    }
+
+
+    // ****************************************************
+
+
+
+ 
+
+    // Variable peticion
+    let peticion = '';
     
-//     //Analisis del recurso solicitado
-//     if (url.pathname == "/") {
-//         peticion += "/home.html"; //petición de la pag principal 
-//     } else {
-//         peticion += url.pathname; //petición de cualquier otra pag
-//     }
+    //Analisis del recurso solicitado
+    if (url.pathname == "/") {
+        peticion += "/home.html"; //petición de la pag principal 
+    } else {
+        peticion += url.pathname; //petición de cualquier otra pag
+    }
 
-//     // Tipo de recurso solicitado
-//     peticion_type = peticion.split(".")[1];
+    // Tipo de recurso solicitado
+    peticion_type = peticion.split(".")[1];
 
-//     peticion = "./tienda" + peticion;
+    peticion = "./tienda" + peticion;
 
-//     console.log("Recurso: " + peticion);
-//     console.log("Extensión del recurso: " + peticion_type);
+    console.log("Recurso: " + peticion);
+    console.log("Extensión del recurso: " + peticion_type);
 
-//     // Especificacion mime
-//     let mime = peticion_type;
+    // Especificacion mime
+    let mime = peticion_type;
 
-//     // Tipo HTML
-//     if (peticion_type == 'html'){
-//         mime = "text/html";
-//     };
+    // Tipo HTML
+    if (peticion_type == 'html'){
+        mime = "text/html";
+    };
 
-//     //  Tipo css
-//     if (peticion_type == 'css'){
-//         mime = "text/css";
-//     }
+    //  Tipo css
+    if (peticion_type == 'css'){
+        mime = "text/css";
+    }
 
-//     // Tipo de img
-//     if ((peticion_type == 'jpeg') || (peticion_type == 'jpg') || (peticion_type == 'ico') || (peticion_type == 'gif')){
-//         mime = "image/tienda/img" + peticion_type;
-//     }
+    // Tipo de img
+    if ((peticion_type == 'jpeg') || (peticion_type == 'jpg') || (peticion_type == 'ico') || (peticion_type == 'gif')){
+        mime = "image/tienda/img" + peticion_type;
+    }
 
-//     // //Lectura asíncrona
-//     fs.readFile(peticion, (err, data) => {
+    // //Lectura asíncrona
+    // fs.readFile(peticion, (err, data) => {
 
-//         if (err){
-//             res.writeHead(404,{'Content-Type': mime});
-//             console.log("Not Found")
-//             petition = "./tienda/error.html"
-//             data =fs.readFileSync(petition)
-//         } else {
-//             res.writeHead(200, {'Content-Type': mime});
-//             console.log("Petición aceptada, 200 OK!");
-//         }
-//         // Envío los datos solicitados
-//         res.write(data);
-//         res.end();
-//         });
+    //     if (err){
+    //         res.writeHead(404,{'Content-Type': mime});
+    //         console.log("Not Found")
+    //         petition = "./tienda/error.html"
+    //         data =fs.readFileSync(petition)
+    //     } else {
+    //         res.writeHead(200, {'Content-Type': mime});
+    //         console.log("Petición aceptada, 200 OK!");
+    //     }
+    //     // Envío los datos solicitados
+    //     res.write(data);
+    //     res.end();
+    //     });
 
-// });
+});
 
 
-// server.listen(PUERTO);
-// console.log("Escuchando en el puerto: " + PUERTO);
+server.listen(PUERTO);
+console.log("Escuchando en el puerto: " + PUERTO);
