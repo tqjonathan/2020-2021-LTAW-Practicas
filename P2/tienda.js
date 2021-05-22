@@ -8,6 +8,30 @@ const url = require('url')
 //Defino el puerto que voy a utilizar
 const PUERTO = 9000;
 
+// Pagina principal
+const MAIN = fs.readFileSync('./tienda/home.html', 'utf-8');
+// Error 404
+const ERORR = fs.readFileSync('./tienda/error.html', 'utf-8');
+
+// Productos
+const PRODUCTO1 = fs.readFileSync('./tienda/product1.html', 'utf-8');
+const PRODUCTO2 = fs.readFileSync('./tienda/product2.html', 'utf-8');
+const PRODUCTO3 = fs.readFileSync('./tienda/product3.html', 'utf-8');
+
+// Formulario Login
+const LOGIN = fs.readFileSync('./tienda/login.html', 'utf-8');
+
+
+
+// ************** Añadiendo paginas adicionales (Carrito, Login ...)
+
+
+
+
+
+
+
+
 //Creo el sevidor
 const server = http.createServer(function (req, res) {
 
@@ -57,7 +81,6 @@ const server = http.createServer(function (req, res) {
     fs.readFile(peticion, (err, data) => {
 
         if (err){
-        //Lanza error TODO
             res.writeHead(404,{'Content-Type': mime});
             console.log("Not Found")
             petition = "./tienda/error.html"

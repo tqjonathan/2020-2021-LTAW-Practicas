@@ -31,12 +31,16 @@
 
 
     <!-- Login  -->
-    <div class="login">
-        <form action="/procesar" method="post">
-            Nombre:
+    <div id="login">
+        <form action="/procesar" method="get">
+            Nombre usuario:
             <input type="text" name="nombre"/>
             <p></p>
-              <input type="submit" value="Enviar"/>
+            Contraseña:
+            <input type="password" name="password" />
+            <p></p>
+            <br>
+            <input class='button' type="submit" value="Enviar"/>
         </form>
     </div>
 
