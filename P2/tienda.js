@@ -1,12 +1,12 @@
 // PRACTICA 2
 
-//Importo los modulos 
+//Importo los modulos
 const http = require('http')
 const fs = require('fs')
 const url = require('url')
 
 //Defino el puerto que voy a utilizar
-const PUERTO = 9000;
+const PUERTO = 8080;
 
 
 // VARIABLES ****
@@ -15,7 +15,7 @@ const PUERTO = 9000;
 let main_pag;
 
 //-- Contenido solicitado
-let content; 
+let content;
 
 //-- Definir los tipos de mime
 const mime_type = {
@@ -35,7 +35,7 @@ const mime_type = {
 // Pagina principal
 const MAIN = fs.readFileSync('./tienda/home.html', 'utf-8');
 // Error 404
-const ERORR = fs.readFileSync('./tienda/error.html', 'utf-8');
+const ERROR = fs.readFileSync('./tienda/error.html', 'utf-8');
 
 // Productos
 const PRODUCTO1 = fs.readFileSync('./tienda/product1.html', 'utf-8');
@@ -67,7 +67,7 @@ const tienda = JSON.parse(tienda_json);
 // ****** USUARIOS REGISTRADOS *****
 
 // Array con los user y Array de passwords
-let nombre_reg = []; 
+let nombre_reg = [];
 let password_reg = [];
 
 //-- Recorrer el json para buscar los clientes registrados
@@ -107,9 +107,7 @@ for (i=0; i<productos.length; i++){
     descripcion.push(item[descr])
     precio.push(item[valor])
 }
-// console.log(productos_json)
-// console.log(descripcion)
-// console.log(precio)
+
 
 
 
@@ -118,7 +116,7 @@ for (i=0; i<productos.length; i++){
 
 const server = http.createServer(function (req, res) {
 
-    console.log("\nPeticion Recibida");
+    // console.log("Peticion Recibida");
 
 
 //   //-- Leer la Cookie recibida y mostrarla en la consola
@@ -132,93 +130,83 @@ const server = http.createServer(function (req, res) {
 
 
 
-    //Construyo la url de la solicitud 
-    const url = new URL(req.url, 'http://' + req.headers['host']);
-        console.log("\nSe ha solicitado el recurso: " + url.pathname);
+    //Construyo la url de la solicitud
+    const myURL = new URL(req.url, 'http://' + req.headers['host']);
+    console.log("");
+    console.log("Método: " + req.method); //-- metodo
+    console.log("Recurso: " + req.url); //-- recurso
+    console.log("Ruta: " + myURL.pathname); //-- ruta sin parametros
+    console.log("Parametros: " + myURL.searchParams); //-- parametos separados
 
 
 
 
       //-- Leer los parámetros
-    let nombre = myURL.searchParams.get('nombre');
-    let password = myURL.searchParams.get('password');
-    let direccion = myURL.searchParams.get('direccion');
-    let tarjeta = myURL.searchParams.get('tarjeta');
-    console.log(" Nombre usuario: " + nombre);
-    console.log(" Password: " + password);
-    console.log(" Direccion de envio: " + direccion);
-    console.log(" Numero de Tarjeta de credito: " + tarjeta);
+    // let nombre = myURL.searchParams.get('nombre');
+    // let password = myURL.searchParams.get('password');
+    // let direccion = myURL.searchParams.get('direccion');
+    // let tarjeta = myURL.searchParams.get('tarjeta');
+    // console.log(" Nombre usuario: " + nombre);
+    // console.log(" Password: " + password);
+    // console.log(" Direccion de envio: " + direccion);
+    // console.log(" Numero de Tarjeta de credito: " + tarjeta);
 
 
 
     // ************ ACCESO A LAS PETICIONES *****************
 
+    let content_type = mime_type["html"];
 
-    if(myURL.pathname == '/'){
+    if (myURL.pathname == '/'){
 
-        content = MAIN;     
-        main_pag = content;
+        content = MAIN;
+
+        // myURL.pathname = "/home.html"
+        // main_pag = content;
+
+    }else if (myURL.pathname == '/producto1'){
+        content = PRODUCTO1;
+
+    }else if (myURL.pathname == '/producto2'){
+        content = PRODUCTO2;
+
+    }else if (myURL.pathname == '/producto3'){
+        content = PRODUCTO3;
+
+    }else if (myURL.pathname == '/login'){
+        
+
+    }else{
+
+        extension = myURL.pathname.split('.')[1]
+
+
+        filePath = "./tienda" + myURL.pathname
+
+        console.log(filePath)
+
+        fs.readFile(filePath, (err, data) => {
+          //-- Controlar si la pagina es no encontrada.
+          //-- Devolver pagina de error personalizada, 404 NOT FOUND
+            if (err){
+                res.writeHead(404,{'Content-Type': content_type});
+                res.write(ERROR);
+                res.end();
+            }else{
+              //-- Todo correcto
+                content_type = mime_type[extension];
+                res.setHeader('Content-Type', content_type);
+                res.write(data);
+                res.end();
+            }
+        });
+        return;
     }
-
 
     // ****************************************************
-
-
-
- 
-
-    // Variable peticion
-    let peticion = '';
-    
-    //Analisis del recurso solicitado
-    if (url.pathname == "/") {
-        peticion += "/home.html"; //petición de la pag principal 
-    } else {
-        peticion += url.pathname; //petición de cualquier otra pag
-    }
-
-    // Tipo de recurso solicitado
-    peticion_type = peticion.split(".")[1];
-
-    peticion = "./tienda" + peticion;
-
-    console.log("Recurso: " + peticion);
-    console.log("Extensión del recurso: " + peticion_type);
-
-    // Especificacion mime
-    let mime = peticion_type;
-
-    // Tipo HTML
-    if (peticion_type == 'html'){
-        mime = "text/html";
-    };
-
-    //  Tipo css
-    if (peticion_type == 'css'){
-        mime = "text/css";
-    }
-
-    // Tipo de img
-    if ((peticion_type == 'jpeg') || (peticion_type == 'jpg') || (peticion_type == 'ico') || (peticion_type == 'gif')){
-        mime = "image/tienda/img" + peticion_type;
-    }
-
-    // //Lectura asíncrona
-    // fs.readFile(peticion, (err, data) => {
-
-    //     if (err){
-    //         res.writeHead(404,{'Content-Type': mime});
-    //         console.log("Not Found")
-    //         petition = "./tienda/error.html"
-    //         data =fs.readFileSync(petition)
-    //     } else {
-    //         res.writeHead(200, {'Content-Type': mime});
-    //         console.log("Petición aceptada, 200 OK!");
-    //     }
-    //     // Envío los datos solicitados
-    //     res.write(data);
-    //     res.end();
-    //     });
+    res.setHeader('Content-Type', content_type);
+    res.write(content);
+    res.end();
 
 });
 
