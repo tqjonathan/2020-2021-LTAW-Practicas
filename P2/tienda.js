@@ -3,7 +3,7 @@
 //Importo los modulos
 const http = require('http')
 const fs = require('fs')
-const url = require('url')
+const url = require('url');
 
 //Defino el puerto que voy a utilizar
 const PUERTO = 8080;
@@ -45,7 +45,7 @@ const PRODUCTO3 = fs.readFileSync('./tienda/product3.html', 'utf-8');
 // Formulario Login
 const LOGIN = fs.readFileSync('./tienda/login.html', 'utf-8');
 const LOGIN_OK = fs.readFileSync('./tienda/login_ok.html', 'utf-8');
-const LOGIN_KO = fs.readFileSync('./tienda/login_ok.html', 'utf-8');
+const LOGIN_KO = fs.readFileSync('./tienda/login_ko.html', 'utf-8');
 
 
 
@@ -121,15 +121,42 @@ const server = http.createServer(function (req, res) {
     // console.log("Peticion Recibida");
 
 
-//   //-- Leer la Cookie recibida y mostrarla en la consola
-//   const cookie = req.headers.cookie;
+  //-- Leer la Cookie recibida y mostrarla en la consola
+    const cookie = req.headers.cookie;
 
 //   //-- Variable para guardar el usuario
-//   let user;
+    let user;
 
 //   //-- Variable para guardar el carrito
-//   let carrito;
+    let carrito;
 
+    // ++++++++ COOKIES +++++++++++++
+
+    if (cookie) {
+        console.log("Cookie: " + cookie);
+    
+        //-- Obtener un array con todos los pares nombre-valor
+        let pares = cookie.split(";");
+    
+        //-- Recorrer todos los pares nombre-valor
+        pares.forEach((element, index) => {
+    
+          //-- Obtener los nombres y valores por separado
+            let [nombre, valor] = element.split('=');
+    
+          //-- Leer nombres
+          //-- Solo si el nombre es 'user'
+            if (nombre.trim() === 'user') {
+               user = valor;
+              //-- Si el nombre es 'carrito'
+            }else if (nombre.trim() === 'carrito') {
+                carrito = valor;
+            }
+        });
+    }else {
+        console.log("Petición sin cookie");
+    }
+    
 
 
     //Construyo la url de la solicitud
@@ -143,13 +170,13 @@ const server = http.createServer(function (req, res) {
 
 
 
-      //-- Leer los parámetros
-    // let nombre = myURL.searchParams.get('nombre');
-    // let password = myURL.searchParams.get('password');
-    // let direccion = myURL.searchParams.get('direccion');
-    // let tarjeta = myURL.searchParams.get('tarjeta');
-    // console.log(" Nombre usuario: " + nombre);
-    // console.log(" Password: " + password);
+    // //   -- Leer los parámetros
+    let nombre = myURL.searchParams.get('nombre');
+    let password = myURL.searchParams.get('password');
+    // // let direccion = myURL.searchParams.get('direccion');
+    // // let tarjeta = myURL.searchParams.get('tarjeta');
+    console.log(" Nombre usuario: " + nombre);
+    console.log(" Password: " + password);
     // console.log(" Direccion de envio: " + direccion);
     // console.log(" Numero de Tarjeta de credito: " + tarjeta);
 
@@ -161,7 +188,16 @@ const server = http.createServer(function (req, res) {
 
     if (myURL.pathname == '/'){
 
-        content = MAIN;
+        if (user) {
+            content = MAIN.replace('<li><a href="login.html">Login</a></li>','');
+            content = content.replace('<h1></h1>',
+                                      '<a href="carrito.html">' + user + ' Cart</a>');
+            main_pag = content;
+        }else{
+            content = MAIN;
+            main_pag = content;
+
+        }
         // main_pag = content;
 
     }else if (myURL.pathname == '/producto1'){
@@ -192,7 +228,7 @@ const server = http.createServer(function (req, res) {
             console.log('User: ' + nombre);
     
           //-- Asignar la cookie del usuario registrado
-            // res.setHeader('Set-Cookie', "user=" + nombre );
+            res.setHeader('Set-Cookie', "user=" + nombre );
     
           //-- Mostramos la pagina OK
             console.log('Usuario registrado');
@@ -201,6 +237,7 @@ const server = http.createServer(function (req, res) {
             content = content.replace("usuario", userLogin);
     
           }else{
+            // console.log("Usuario incorrecto")
               // Si las credenciales fallan, devuelve pagina de login incorrecto
             content = LOGIN_KO;
           }   

@@ -33,6 +33,14 @@ a{
     font-size: x-large;
 }
 
+#buy {
+    color: black;
+    font-size: x-large;
+    text-decoration: none;
+    border: 2px solid black;
+
+}
+
 p{
     color:white;
 }
