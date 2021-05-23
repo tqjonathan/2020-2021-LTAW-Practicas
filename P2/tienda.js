@@ -111,9 +111,6 @@ for (i=0; i<productos.length; i++){
 }
 
 
-
-
-
 // +++++++ Creo el sevidor +++++++++++++++++
 
 const server = http.createServer(function (req, res) {
@@ -122,7 +119,7 @@ const server = http.createServer(function (req, res) {
 
 
   //-- Leer la Cookie recibida y mostrarla en la consola
-    const cookie = req.headers.cookie;
+	const cookie = req.headers.cookie;
 
 //   //-- Variable para guardar el usuario
     let user;
@@ -208,6 +205,39 @@ const server = http.createServer(function (req, res) {
 
     }else if (myURL.pathname == '/producto3'){
         content = PRODUCTO3;
+    
+    }else if(myURL.pathname == '/product1/add' || myURL.pathname == '/product2/add' ||
+    	myURL.pathname == '/product3/add'){
+		
+		// AÑADIR AL CARRITO
+		producto_path = myURL.pathname.split('/')[1];
+		
+		if (producto_path = "producto1") {
+			producto = "Iron Maiden"
+		}else if (producto_path = "producto2"){
+			producto = "Chicago Bulls"
+		}else{
+			producto = "Led Zepellin"
+		}
+
+		// añade el producto a la lista de carrito
+		// productos.push(producto);
+
+		list_prod.push(producto)
+		console.log('PEDIDO:')
+    	console.log(list_productos)
+
+		// añadior contador para añadir varias unidades, en este caso mantendremos siempre 1 unidad
+
+
+		// añadir los pedidos al json + cookies
+
+		res.setHeader('Set-Cookie', "carrito=" + list_prod);
+
+
+
+      
+        
 
     }else if (myURL.pathname == '/login'){
 
