@@ -44,6 +44,8 @@ const PRODUCTO3 = fs.readFileSync('./tienda/product3.html', 'utf-8');
 
 // Formulario Login
 const LOGIN = fs.readFileSync('./tienda/login.html', 'utf-8');
+const LOGIN_OK = fs.readFileSync('./tienda/login_ok.html', 'utf-8');
+const LOGIN_KO = fs.readFileSync('./tienda/login_ok.html', 'utf-8');
 
 
 
@@ -160,8 +162,6 @@ const server = http.createServer(function (req, res) {
     if (myURL.pathname == '/'){
 
         content = MAIN;
-
-        // myURL.pathname = "/home.html"
         // main_pag = content;
 
     }else if (myURL.pathname == '/producto1'){
@@ -183,6 +183,27 @@ const server = http.createServer(function (req, res) {
             content = LOGIN
         }
         extension = "html";
+    }else if (myURL.pathname == '/procesar'){
+
+        //Con el array extraido antes de la base de datos, compara si existe un user con su password
+        // y lo añade a la cookie
+        if ((nombre_reg.includes(nombre)) && (password_reg.includes(password))){
+
+            console.log('User: ' + nombre);
+    
+          //-- Asignar la cookie del usuario registrado
+            // res.setHeader('Set-Cookie', "user=" + nombre );
+    
+          //-- Mostramos la pagina OK
+            console.log('Usuario registrado');
+            content = LOGIN_OK;
+            userLogin = nombre;
+            content = content.replace("usuario", userLogin);
+    
+          }else{
+              // Si las credenciales fallan, devuelve pagina de login incorrecto
+            content = LOGIN_KO;
+          }   
     }else{
 
         extension = myURL.pathname.split('.')[1]
