@@ -88,28 +88,28 @@ let productos = [];
 let list_productos;
 let productos_carrito;
 
-// // Obtengo solo los productos del fichero JSON
-// prod = tienda[0]["productos"]
+// Obtengo solo los productos del fichero JSON
+prod = tienda[0]["productos"]
 
 
-// //-- Array de productos del json
-// let productos_json = []
-// //-- Array de descripciones
-// let descripcion = [];
-// //-- Array de precios
-// let precio = [];
+//-- Array de productos del json
+let productos_json = []
+//-- Array de descripciones
+let descripcion = [];
+//-- Array de precios
+let precio = [];
 
-// for (i=0; i<prod.length; i++){
-//     nombre = Object.keys(prod[i])[0]
-//     descr = Object.keys(prod[i])[1]
-//     valor = Object.keys(prod[i])[2]
+for (i=0; i<prod.length; i++){
+    nombre = Object.keys(prod[i])[0]
+    descr = Object.keys(prod[i])[1]
+    valor = Object.keys(prod[i])[2]
 
-//     item = prod[i]
+    item = prod[i]
 
-//     productos_json.push(item[nombre])
-//     descripcion.push(item[descr])
-//     precio.push(item[valor])
-// }
+    productos_json.push(item[nombre])
+    descripcion.push(item[descr])
+    precio.push(item[valor])
+}
 
 
 // +++++++ Creo el sevidor +++++++++++++++++
@@ -169,10 +169,10 @@ const server = http.createServer(function (req, res) {
 
 
     // //   -- Leer los parámetros
-    let nombre = myURL.searchParams.get('nombre');
+    let nombre = myURL.searchParams.get('name');
     let password = myURL.searchParams.get('password');
-    let direccion = myURL.searchParams.get('direccion');
-    let tarjeta = myURL.searchParams.get('tarjeta');
+    let direccion = myURL.searchParams.get('address');
+    let tarjeta = myURL.searchParams.get('cardNumber');
     // console.log(" Nombre usuario: " + nombre);
     // console.log(" Password: " + password);
     // console.log(" Direccion de envio: " + direccion);
@@ -336,26 +336,73 @@ const server = http.createServer(function (req, res) {
       content = CHECKOUT.replace('<h2>empty</h2>', productos_carrito)
     }else if (myURL.pathname == '/pay'){
       content = CHECKOUT_OK
+    }else if (myURL.pathname == '/products'){
+
+      console.log("Peticion de Productos!")
+      content_type = mime_type["json"];
+  
+      //-- Leer los parámetros
+      let param1 = myURL.searchParams.get('param1');
+  
+      //-- Convertimos los caracteres alphanumericos en string
+      param1 = param1.toUpperCase();
+  
+      console.log("  Param: " +  param1);
+
+      let result = [];
+
+      //-- Para ello
+      //-- Recorremos todos los productos de la base de datos
+      //-- Y los que cuadren, se añaden al array
+      for (let prod of productos_json) {
+          //-- Pasar a mayúsculas
+          prodU = prod.toUpperCase();
+  
+          //-- Si el producto comienza por lo indicado en el parametro
+          //-- meter este producto en el array de resultados
+          if (prodU.startsWith(param1)) {
+              result.push(prod);
+          }
+      }
+      //-- Imprimimos el aray de resultado de busquedas
+      console.log(result);
+      busqueda = result;
+      //-- Pasamos el resultado a formato JSON con stringify
+      content = JSON.stringify(result);
+
+
+
+
+
+
+
+
+
+
+
+
     }else{
 
         extension = myURL.pathname.split('.')[1]
         path = myURL.pathname.split('/');
-        // console.log(path)
+        console.log(path)
         if (path.length > 2) {
           file = path[path.length-1]
-          // console.log(file)
           if (path.length == 3){
             if (path[1].startsWith('product')){
               filename = "./tienda/" + file
-
+              console.log(filename)
             }else{
               filename = "./tienda/" + path[1] + '/' + file
+              console.log(filename)
             }
           }else{
             filename = "./tienda/" + path[2] + '/' + file
+            console.log(filename)
           }
         }else{
           filename = "./tienda/" + myURL.pathname.split('/')[1];
+          console.log(filename)
         }
 
         fs.readFile(filename, (err, data) => {

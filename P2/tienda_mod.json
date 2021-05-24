@@ -1,59 +1,85 @@
 [
     {
-        "productos":[
-                        {
-                            "nombre": "Iron Maiden",
-                            "descripcion": "Camiseta Iron Maiden. Talla M", 
-                            "precio": 20,
-                            "stock": 10
-                        },
-                        {
-                            "nombre": "Chicago Bulls",
-                            "descripcion": "Camiseta Chicago Bulls. Talla M", 
-                            "precio": 20,
-                            "stock": 10
-                        },
-                        {
-                            "nombre": "Led Zeppelin",
-                            "descripcion": "Camiseta Led Zeppelin. Talla M", 
-                            "precio": 20,
-                            "stock": 10
-                        }
-                    ]
+        "productos": [
+            {
+                "nombre": "Iron Maiden",
+                "descripcion": "Camiseta Iron Maiden. Talla M",
+                "precio": 20,
+                "stock": 10
+            },
+            {
+                "nombre": "Chicago Bulls",
+                "descripcion": "Camiseta Chicago Bulls. Talla M",
+                "precio": 20,
+                "stock": 10
+            },
+            {
+                "nombre": "Led Zeppelin",
+                "descripcion": "Camiseta Led Zeppelin. Talla M",
+                "precio": 20,
+                "stock": 10
+            }
+        ]
     },
     {
         "usuarios": [
-                        {
-                            "usuario":"pepe",
-                            "nombre": "Jose Perez", 
-                            "email": "pepe@perez.com", 
-                            "password": "pepe123"
-                        },
-                        {
-                            "usuario":"root", 
-                            "nombre": "Root Root", 
-                            "email": "root@root.com", 
-                            "password": "root123"
-                        }
-                    ]
+            {
+                "usuario": "pepe",
+                "nombre": "Jose Perez",
+                "email": "pepe@perez.com",
+                "password": "pepe123"
+            },
+            {
+                "usuario": "root",
+                "nombre": "Root Root",
+                "email": "root@root.com",
+                "password": "root123"
+            }
+        ]
     },
     {
-        "pedidos":  [
-                        {
-                            "usuario":"pepe",
-                            "direccion": "calle falsa 123",
-                            "tarjeta": 12345,
-                            "carrito":  [
-                                            {
-                                                "producto": "Chicago Bulls",
-                                                "unidades": 1
-                                            },
-                                            {
-                                                "producto": "Iron Maiden",
-                                                "unidades": 1
-                                            }
-                                        ]
-                        }
-                    ]
+        "pedidos": [
+            {
+                "usuario": "pepe",
+                "direccion": "calle falsa 123",
+                "tarjeta": 12345,
+                "carrito": [
+                    {
+                        "producto": "Chicago Bulls",
+                        "unidades": 1
+                    },
+                    {
+                        "producto": "Iron Maiden",
+                        "unidades": 1
+                    }
+                ]
+            },
+            {
+                "usuario": "root",
+                "direccion": "Madrid 10",
+                "tarjeta": "12345",
+                "carrito": [
+                    {
+                        "producto": "Led Zeppelin",
+                        "unidades": 1
+                    }
+                ]
+            },
+            {
+                "usuario": "root",
+                "direccion": "Madrid 101",
+                "tarjeta": "12345",
+                "carrito": [
+                    {
+                        "producto": "Led Zeppelin",
+                        "unidades": 2
+                    },
+                    {
+                        "producto": "Iron Maiden",
+                        "unidades": 1
+                    }
+                ]
+            }
+        ]
     }
 ]
