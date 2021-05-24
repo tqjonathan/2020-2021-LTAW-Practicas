@@ -38,19 +38,18 @@ const MAIN = fs.readFileSync('./tienda/home.html', 'utf-8');
 const ERROR = fs.readFileSync('./tienda/error.html', 'utf-8');
 
 // Productos
-const PRODUCTO1 = fs.readFileSync('./tienda/product1.html', 'utf-8');
-const PRODUCTO2 = fs.readFileSync('./tienda/product2.html', 'utf-8');
-const PRODUCTO3 = fs.readFileSync('./tienda/product3.html', 'utf-8');
+const PRODUCT1 = fs.readFileSync('./tienda/product1.html', 'utf-8');
+const PRODUCT2 = fs.readFileSync('./tienda/product2.html', 'utf-8');
+const PRODUCT3 = fs.readFileSync('./tienda/product3.html', 'utf-8');
 
-// Formulario Login
+// Formularios Login
 const LOGIN = fs.readFileSync('./tienda/login.html', 'utf-8');
 const LOGIN_OK = fs.readFileSync('./tienda/login_ok.html', 'utf-8');
 const LOGIN_KO = fs.readFileSync('./tienda/login_ko.html', 'utf-8');
 
-
-
 // ************** Añadiendo paginas adicionales (Carrito, Login ...)
-
+const CART = fs.readFileSync('./tienda/cart.html', 'utf-8');
+const CHECKOUT = fs.readFileSync('./tienda/checkout.html', 'utf-8');
 
 // Fichero JSON
 const FICHERO_JSON = ("tienda.json");
@@ -83,12 +82,12 @@ for (i = 0; i < usuarios_reg.length; i++){
 // ******** PRODUCTOS ******************
 
 //-- Array de productos
-let productos_ = [];
+let productos = [];
 let list_productos;
 let productos_carrito;
 
 // // Obtengo solo los productos del fichero JSON
-productos = tienda[0]["productos"]
+prod = tienda[0]["productos"]
 
 
 //-- Array de productos del json
@@ -98,12 +97,12 @@ let descripcion = [];
 //-- Array de precios
 let precio = [];
 
-for (i=0; i<productos.length; i++){
-    nombre = Object.keys(productos[i])[0]
-    descr = Object.keys(productos[i])[1]
-    valor = Object.keys(productos[i])[2]
+for (i=0; i<prod.length; i++){
+    nombre = Object.keys(prod[i])[0]
+    descr = Object.keys(prod[i])[1]
+    valor = Object.keys(prod[i])[2]
 
-    item = productos[i]
+    item = prod[i]
 
     productos_json.push(item[nombre])
     descripcion.push(item[descr])
@@ -195,60 +194,87 @@ const server = http.createServer(function (req, res) {
     }else if (myURL.pathname == '/product1'){
 
       if (user) {
-          content = PRODUCTO1.replace('<li><a href="/login">Login</a></li>','<a href="carrito.html">' + user + ' Cart</a>')
-          content = content.replace('<h1></h1>','<h2><a id="buy" href="/producto1/add">BUY</a></h2>')
+          content = PRODUCT1.replace('<li><a href="/login">Login</a></li>','<a href="carrito.html">' + user + ' Cart</a>')
+          content = content.replace('<h1></h1>','<h2><a id="buy" href="/product1/add">BUY</a></h2>')
       }else{
-          content = PRODUCTO1;
+          content = PRODUCT1;
       }
 
     }else if (myURL.pathname == '/product2'){
 
       if (user) {
-        content = PRODUCTO2.replace('<li><a href="/login">Login</a></li>','<a href="carrito.html">' + user + ' Cart</a>')
-        content = content.replace('<h1></h1>','<h2><a id="buy" href="/producto1/add">BUY</a></h2>')
+        content = PRODUCT2.replace('<li><a href="/login">Login</a></li>','<a href="carrito.html">' + user + ' Cart</a>')
+        content = content.replace('<h1></h1>','<h2><a id="buy" href="/product2/add">BUY</a></h2>')
       }else{
-          content = PRODUCTO2;
+          content = PRODUCT2;
       }
 
     }else if (myURL.pathname == '/product3'){
       if (user) {
-        content = PRODUCTO3.replace('<li><a href="/login">Login</a></li>','<a href="carrito.html">' + user + ' Cart</a>')
-        content = content.replace('<h1></h1>','<h2><a id="buy" href="/producto1/add">BUY</a></h2>')
+        content = PRODUCT3.replace('<li><a href="/login">Login</a></li>','<a href="carrito.html">' + user + ' Cart</a>')
+        content = content.replace('<h1></h1>','<h2><a id="buy" href="/product3/add">BUY</a></h2>')
       }else{
-          content = PRODUCTO3;
+          content = PRODUCT3;
       }
     
-    }else if(myURL.pathname == '/product1/add' || myURL.pathname == '/product2/add' ||
-    	myURL.pathname == '/product3/add'){
-		
-		// AÑADIR AL CARRITO
-		producto_path = myURL.pathname.split('/')[1];
-		
-		if (producto_path = "producto1") {
-			producto = "Iron Maiden"
-		}else if (producto_path = "producto2"){
-			producto = "Chicago Bulls"
-		}else{
-			producto = "Led Zepellin"
-		}
+    }else if(myURL.pathname == '/product1/add' || myURL.pathname == '/product2/add' || myURL.pathname == '/product3/add'){
 
-		// añade el producto a la lista de carrito
-		// productos.push(producto);
-
-		list_prod.push(producto)
-		console.log('PEDIDO:')
-    	console.log(list_productos)
-
-		// añadior contador para añadir varias unidades, en este caso mantendremos siempre 1 unidad
+      // AÑADIR AL CARRITO
+      productoPath = myURL.pathname.split('/')[1];
+      if (productoPath == "product3"){
+        producto = "Led Zeppelin"
+      }else if (productoPath == "product2"){
+        producto = "Chicago Bulls"
+      }else{
+        producto = "Iron Maiden"
+      }
 
 
-		// añadir los pedidos al json + cookies
+      // console.log(producto)
 
-		res.setHeader('Set-Cookie', "carrito=" + list_prod);
+      // añade el producto a la lista de carrito
+      productos.push(producto);
+      // console.log(productos)
 
+      // // añadior contador para añadir varias unidades, en este caso mantendremos siempre 1 unidad
 
+      let productos_sum = {};
+      productos.forEach(function(numero){
+        productos_sum[numero] = (productos_sum[numero] || 0) + 1;
+      });
 
-      
+      // // añadir los pedidos al json + cookies
+      // console.log(productos_sum) // ITEM + Nº
+
+      let total = '';
+      let total_cookie = '';
+      let list_prod = [];
+
+      // ******************************************************
+      //-- Pasar los productos sumados a string
+      for (i=0; i<Object.keys(productos_sum).length; i++){
+        prod = Object.keys(productos_sum)
+        cant = Object.values(productos_sum)
+        // formato para cookies se puede cambiar
+        total += ('<h4>' + prod[i] + ': ' + cant[i] + '</h4>')
+        total_cookie += (prod[i] + ': ' + cant[i] + ', ')
+        //---------
+        pedido = {"producto": prod[i],
+                  "unidades": cant[i]}
+        list_prod.push(pedido)
+      }
+
+      list_productos = list_prod;
+      // console.log('PEDIDO:')
+      // console.log(list_productos)
+      console.log(total)
+      console.log(total_cookie)
+      // console.log('PEDIDO:')
+      // console.log(list_productos)
+
+      // res.setHeader('Set-Cookie', "carrito=" + list_productos);
+
+      content = main_pag      
         
 
     }else if (myURL.pathname == '/login'){
