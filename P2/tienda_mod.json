@@ -55,10 +55,10 @@
                 ]
             },
             {
-                "usuario": "root",
-                "direccion": "Madrid 101",
-                "tarjeta": "54321",
-                "carrito": [
+                "usuario": "pepe",
+                "direccion": "Falsa 123",
+                "tarjeta": "12345",
+                "cart": [
                     {
                         "producto": "Chicago Bulls",
                         "unidades": 1
