@@ -50,10 +50,12 @@ const LOGIN_KO = fs.readFileSync('./tienda/login_ko.html', 'utf-8');
 // ************** Añadiendo paginas adicionales (Carrito, Login ...)
 const CART = fs.readFileSync('./tienda/cart.html', 'utf-8');
 const CHECKOUT = fs.readFileSync('./tienda/checkout.html', 'utf-8');
+const CHECKOUT_OK = fs.readFileSync('./tienda/checkout_ok.html', 'utf-8');
+
 
 // Fichero JSON
-const FICHERO_JSON = ("tienda.json");
-const FICHERO_JSON_OUT = "tienda-mod.json";
+const FICHERO_JSON = "tienda.json";
+const FICHERO_JSON_OUT = "tienda_mod.json";
 
 //-- Leer el fichero JSON
 //-- de esta forma lo hacemos sincrona
@@ -87,27 +89,27 @@ let list_productos;
 let productos_carrito;
 
 // // Obtengo solo los productos del fichero JSON
-prod = tienda[0]["productos"]
+// prod = tienda[0]["productos"]
 
 
-//-- Array de productos del json
-let productos_json = []
-//-- Array de descripciones
-let descripcion = [];
-//-- Array de precios
-let precio = [];
+// //-- Array de productos del json
+// let productos_json = []
+// //-- Array de descripciones
+// let descripcion = [];
+// //-- Array de precios
+// let precio = [];
 
-for (i=0; i<prod.length; i++){
-    nombre = Object.keys(prod[i])[0]
-    descr = Object.keys(prod[i])[1]
-    valor = Object.keys(prod[i])[2]
+// for (i=0; i<prod.length; i++){
+//     nombre = Object.keys(prod[i])[0]
+//     descr = Object.keys(prod[i])[1]
+//     valor = Object.keys(prod[i])[2]
 
-    item = prod[i]
+//     item = prod[i]
 
-    productos_json.push(item[nombre])
-    descripcion.push(item[descr])
-    precio.push(item[valor])
-}
+//     productos_json.push(item[nombre])
+//     descripcion.push(item[descr])
+//     precio.push(item[valor])
+// }
 
 
 // +++++++ Creo el sevidor +++++++++++++++++
@@ -135,7 +137,7 @@ const server = http.createServer(function (req, res) {
         let pares = cookie.split(";");
     
         //-- Recorrer todos los pares nombre-valor
-        pares.forEach((element, index) => {
+        pares.forEach((element) => {
     
           //-- Obtener los nombres y valores por separado
             let [nombre, valor] = element.split('=');
@@ -169,12 +171,33 @@ const server = http.createServer(function (req, res) {
     // //   -- Leer los parámetros
     let nombre = myURL.searchParams.get('nombre');
     let password = myURL.searchParams.get('password');
-    // // let direccion = myURL.searchParams.get('direccion');
-    // // let tarjeta = myURL.searchParams.get('tarjeta');
+    let direccion = myURL.searchParams.get('direccion');
+    let tarjeta = myURL.searchParams.get('tarjeta');
     // console.log(" Nombre usuario: " + nombre);
     // console.log(" Password: " + password);
     // console.log(" Direccion de envio: " + direccion);
     // console.log(" Numero de Tarjeta de credito: " + tarjeta);
+
+
+
+      //-- Comprobamos si la direccion y tarjeta es distinto de null
+    if ((direccion != null) && (tarjeta != null)){
+      //-- Añadirlos al pedido
+      let pedido = {"usuario" : user,
+                    "direccion" : direccion,
+                    "tarjeta" : tarjeta,
+                    "carrito": list_productos}
+
+      //-- Añadir el pedido a la tienda
+      tienda[2]["pedidos"].push(pedido)
+  
+      //-- Convertir la variable a cadena JSON
+      let mytienda = JSON.stringify(tienda, null, 4);
+
+      //-- Guardarla en el fichero destino
+      console.log("añadiendo pedido")
+      fs.writeFileSync(FICHERO_JSON_OUT, mytienda);
+    };
 
 
     // ************ ACCESO A LAS PETICIONES *****************
@@ -184,7 +207,7 @@ const server = http.createServer(function (req, res) {
     if (myURL.pathname == '/'){
 
       if (user) {
-          content = MAIN.replace('<li><a href="/login">Login</a></li>','<a href="carrito.html">' + user + ' Cart</a>');
+          content = MAIN.replace('<li><a href="/login">Login</a></li>','<a href="/checkout">' + user + ' Cart</a>');
           main_pag = content;
       }else{
           content = MAIN;
@@ -194,7 +217,7 @@ const server = http.createServer(function (req, res) {
     }else if (myURL.pathname == '/product1'){
 
       if (user) {
-          content = PRODUCT1.replace('<li><a href="/login">Login</a></li>','<a href="carrito.html">' + user + ' Cart</a>')
+          content = PRODUCT1.replace('<li><a href="/login">Login</a></li>','<a href="/checkout">' + user + ' Cart</a>')
           content = content.replace('<h1></h1>','<h2><a id="buy" href="/product1/add">BUY</a></h2>')
       }else{
           content = PRODUCT1;
@@ -203,7 +226,7 @@ const server = http.createServer(function (req, res) {
     }else if (myURL.pathname == '/product2'){
 
       if (user) {
-        content = PRODUCT2.replace('<li><a href="/login">Login</a></li>','<a href="carrito.html">' + user + ' Cart</a>')
+        content = PRODUCT2.replace('<li><a href="/login">Login</a></li>','<a href="/checkout">' + user + ' Cart</a>')
         content = content.replace('<h1></h1>','<h2><a id="buy" href="/product2/add">BUY</a></h2>')
       }else{
           content = PRODUCT2;
@@ -211,7 +234,7 @@ const server = http.createServer(function (req, res) {
 
     }else if (myURL.pathname == '/product3'){
       if (user) {
-        content = PRODUCT3.replace('<li><a href="/login">Login</a></li>','<a href="carrito.html">' + user + ' Cart</a>')
+        content = PRODUCT3.replace('<li><a href="/login">Login</a></li>','<a href="/checkout">' + user + ' Cart</a>')
         content = content.replace('<h1></h1>','<h2><a id="buy" href="/product3/add">BUY</a></h2>')
       }else{
           content = PRODUCT3;
@@ -256,7 +279,7 @@ const server = http.createServer(function (req, res) {
         prod = Object.keys(productos_sum)
         cant = Object.values(productos_sum)
         // formato para cookies se puede cambiar
-        total += ('<h4>' + prod[i] + ': ' + cant[i] + '</h4>')
+        total += ('<h2>' + prod[i] + ': ' + cant[i] + '</h2>')
         total_cookie += (prod[i] + ': ' + cant[i] + ', ')
         //---------
         pedido = {"producto": prod[i],
@@ -267,15 +290,15 @@ const server = http.createServer(function (req, res) {
       list_productos = list_prod;
       // console.log('PEDIDO:')
       // console.log(list_productos)
-      console.log(total)
+      // console.log(total)
       console.log(total_cookie)
       // console.log('PEDIDO:')
       // console.log(list_productos)
 
-      // res.setHeader('Set-Cookie', "carrito=" + list_productos);
-
-      content = main_pag      
-        
+      productos_carrito = total;
+      res.setHeader('Set-Cookie', "cart=" + total_cookie);
+      content = CART.replace('<h2>empty</h2>', total );
+      content = content.replace('<h3></h3>', "<h1><a id= 'buy' href='/checkout'>Checkout</a></h1>");
 
     }else if (myURL.pathname == '/login'){
 
@@ -309,16 +332,33 @@ const server = http.createServer(function (req, res) {
               // Si las credenciales fallan, devuelve pagina de login incorrecto
             content = LOGIN_KO;
           }   
+    }else if (myURL.pathname == '/checkout'){
+      content = CHECKOUT.replace('<h2>empty</h2>', productos_carrito)
+    }else if (myURL.pathname == '/pay'){
+      content = CHECKOUT_OK
     }else{
 
         extension = myURL.pathname.split('.')[1]
+        path = myURL.pathname.split('/');
+        // console.log(path)
+        if (path.length > 2) {
+          file = path[path.length-1]
+          // console.log(file)
+          if (path.length == 3){
+            if (path[1].startsWith('product')){
+              filename = "./tienda/" + file
 
+            }else{
+              filename = "./tienda/" + path[1] + '/' + file
+            }
+          }else{
+            filename = "./tienda/" + path[2] + '/' + file
+          }
+        }else{
+          filename = "./tienda/" + myURL.pathname.split('/')[1];
+        }
 
-        filePath = "./tienda" + myURL.pathname
-
-        // console.log(filePath)
-
-        fs.readFile(filePath, (err, data) => {
+        fs.readFile(filename, (err, data) => {
           //-- Controlar si la pagina es no encontrada.
           //-- Devolver pagina de error personalizada, 404 NOT FOUND
             if (err){

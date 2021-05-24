@@ -27,17 +27,29 @@
         </div>
     </div>
 
+    <div id="cart">
+        <!-- Añadido Correctamente -->
+        <h1>Cart List:</h1>
+
+        <div id="list">
+        <!-- Lista -->
+            <h2>empty</h2>
+        </div>
+    </div><br>
+
 <!-- ----Error Line -->
 
-    <div class="error">
-
-        <!-- Añadido Correctamente -->
-        <h1></h1>
-        <!-- Lista -->
-        <h2></h2>
-        <!-- Finalizar Compra -->
-        <h3></h3>
-
+    <div>
+        <form action="/pay" method="get">
+            Shipping Address: 
+            <input type="text" name="address"/>
+            <p></p><br>
+            Card Number:
+            <input type="text" name="cardNumber" />
+            <p></p>
+            <br>
+            <input class='button' type="submit" value="Checkout"/>
+        </form>
     </div>
 
 </body>

@@ -65,16 +65,29 @@ p{
 
 }
 
-.error{
+#error{
     min-width: 300px;
     text-align: center;
     font-size: 30px;
-    text-align: center;
     line-height: 200px;
     margin: 25px 0;
 
 }
+#cart{
+    min-width: 300px;
+    text-align: center;
+    font-size: 30px;
+    margin: 25px 0;
 
+}
+
+#list{
+    text-align: center;
+    border-left: 10px;
+    font-size: 15px;
+    /* line-height: 200px; */
+    /* margin: 25px 0; */
+}
 
 .col-3{
     flex: 30%;
@@ -88,7 +101,7 @@ p{
     border: 5px solid black;
     padding: 30px 0;
     margin-top: 30px;
-    
+
 }
 
 #login{
