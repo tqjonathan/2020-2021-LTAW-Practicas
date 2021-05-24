@@ -130,7 +130,7 @@ const server = http.createServer(function (req, res) {
     // ++++++++ COOKIES +++++++++++++
 
     if (cookie) {
-        console.log("Cookie: " + cookie);
+        // console.log("Cookie: " + cookie);
     
         //-- Obtener un array con todos los pares nombre-valor
         let pares = cookie.split(";");
@@ -151,18 +151,18 @@ const server = http.createServer(function (req, res) {
             }
         });
     }else {
-        console.log("Petición sin cookie");
+        // console.log("Petición sin cookie");
     }
     
 
 
     //Construyo la url de la solicitud
     const myURL = new URL(req.url, 'http://' + req.headers['host']);
-    console.log("");
-    console.log("Método: " + req.method); //-- metodo
-    console.log("Recurso: " + req.url); //-- recurso
-    console.log("Ruta: " + myURL.pathname); //-- ruta sin parametros
-    console.log("Parametros: " + myURL.searchParams); //-- parametos separados
+    // console.log("");
+    // console.log("Método: " + req.method); //-- metodo
+    // console.log("Recurso: " + req.url); //-- recurso
+    // console.log("Ruta: " + myURL.pathname); //-- ruta sin parametros
+    // console.log("Parametros: " + myURL.searchParams); //-- parametos separados
 
 
 
@@ -172,11 +172,10 @@ const server = http.createServer(function (req, res) {
     let password = myURL.searchParams.get('password');
     // // let direccion = myURL.searchParams.get('direccion');
     // // let tarjeta = myURL.searchParams.get('tarjeta');
-    console.log(" Nombre usuario: " + nombre);
-    console.log(" Password: " + password);
+    // console.log(" Nombre usuario: " + nombre);
+    // console.log(" Password: " + password);
     // console.log(" Direccion de envio: " + direccion);
     // console.log(" Numero de Tarjeta de credito: " + tarjeta);
-
 
 
     // ************ ACCESO A LAS PETICIONES *****************
@@ -185,26 +184,39 @@ const server = http.createServer(function (req, res) {
 
     if (myURL.pathname == '/'){
 
-        if (user) {
-            content = MAIN.replace('<li><a href="login.html">Login</a></li>','');
-            content = content.replace('<h1></h1>',
-                                      '<a href="carrito.html">' + user + ' Cart</a>');
-            main_pag = content;
-        }else{
-            content = MAIN;
-            main_pag = content;
+      if (user) {
+          content = MAIN.replace('<li><a href="/login">Login</a></li>','<a href="carrito.html">' + user + ' Cart</a>');
+          main_pag = content;
+      }else{
+          content = MAIN;
+          main_pag = content;
+      }
 
-        }
-        // main_pag = content;
+    }else if (myURL.pathname == '/product1'){
 
-    }else if (myURL.pathname == '/producto1'){
-        content = PRODUCTO1;
+      if (user) {
+          content = PRODUCTO1.replace('<li><a href="/login">Login</a></li>','<a href="carrito.html">' + user + ' Cart</a>')
+          content = content.replace('<h1></h1>','<h2><a id="buy" href="/producto1/add">BUY</a></h2>')
+      }else{
+          content = PRODUCTO1;
+      }
 
-    }else if (myURL.pathname == '/producto2'){
-        content = PRODUCTO2;
+    }else if (myURL.pathname == '/product2'){
 
-    }else if (myURL.pathname == '/producto3'){
-        content = PRODUCTO3;
+      if (user) {
+        content = PRODUCTO2.replace('<li><a href="/login">Login</a></li>','<a href="carrito.html">' + user + ' Cart</a>')
+        content = content.replace('<h1></h1>','<h2><a id="buy" href="/producto1/add">BUY</a></h2>')
+      }else{
+          content = PRODUCTO2;
+      }
+
+    }else if (myURL.pathname == '/product3'){
+      if (user) {
+        content = PRODUCTO3.replace('<li><a href="/login">Login</a></li>','<a href="carrito.html">' + user + ' Cart</a>')
+        content = content.replace('<h1></h1>','<h2><a id="buy" href="/producto1/add">BUY</a></h2>')
+      }else{
+          content = PRODUCTO3;
+      }
     
     }else if(myURL.pathname == '/product1/add' || myURL.pathname == '/product2/add' ||
     	myURL.pathname == '/product3/add'){
@@ -278,7 +290,7 @@ const server = http.createServer(function (req, res) {
 
         filePath = "./tienda" + myURL.pathname
 
-        console.log(filePath)
+        // console.log(filePath)
 
         fs.readFile(filePath, (err, data) => {
           //-- Controlar si la pagina es no encontrada.
