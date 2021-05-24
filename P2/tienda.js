@@ -1,6 +1,6 @@
 // PRACTICA 2
 
-//Importo los modulos
+// Modulos
 const http = require('http')
 const fs = require('fs')
 const url = require('url');
@@ -9,28 +9,6 @@ const url = require('url');
 const PUERTO = 8080;
 
 
-// VARIABLES ****
-
-//-- Variable pagina principal
-let main_pag;
-
-//-- Contenido solicitado
-let content;
-
-//-- Definir los tipos de mime
-const mime_type = {
-    "html" : "text/html",
-    "css"  : "text/css",
-    "js"   : "application/javascript",
-    "jpg"  : "image/jpg",
-    "JPG"  : "image/jpg",
-    "jpeg" : "image/jpeg",
-    "png"  : "image/png",
-    "gif"  : "image/gif",
-    "ico"  : "image/x-icon",
-    "json" : "application/json",
-    "ttf"  : "font/ttf"
-  };
 
 // Pagina principal
 const MAIN = fs.readFileSync('./tienda/home.html', 'utf-8');
@@ -57,15 +35,30 @@ const CHECKOUT_OK = fs.readFileSync('./tienda/checkout_ok.html', 'utf-8');
 const FICHERO_JSON = "tienda.json";
 const FICHERO_JSON_OUT = "tienda_mod.json";
 
-//-- Leer el fichero JSON
-//-- de esta forma lo hacemos sincrona
+//-- Contenido solicitado
+let content;
+
+//
+let busqueda = [];
+
+//-- Definir los tipos de mime
+const mime_type = {
+    "html" : "text/html",
+    "css"  : "text/css",
+    "js"   : "application/javascript",
+    "jpg"  : "image/jpg",
+    "JPG"  : "image/jpg",
+    "jpeg" : "image/jpeg",
+    "png"  : "image/png",
+    "gif"  : "image/gif",
+    "ico"  : "image/x-icon",
+    "json" : "application/json",
+    "ttf"  : "font/ttf"
+  };
+
+//-- Ficheros JSON
 const  tienda_json = fs.readFileSync(FICHERO_JSON);
-
-//-- Crear la estructura tienda a partir del contenido del fichero
-//-- nos devuelve la estructura del json
 const tienda = JSON.parse(tienda_json);
-
-
 
 // ****** USUARIOS REGISTRADOS *****
 
@@ -126,7 +119,7 @@ const server = http.createServer(function (req, res) {
     let user;
 
 //   //-- Variable para guardar el carrito
-    let carrito;
+    // let carrito;
 
     // ++++++++ COOKIES +++++++++++++
 
@@ -151,12 +144,8 @@ const server = http.createServer(function (req, res) {
                 carrito = valor;
             }
         });
-    }else {
-        // console.log("Petición sin cookie");
     }
     
-
-
     //Construyo la url de la solicitud
     const myURL = new URL(req.url, 'http://' + req.headers['host']);
     // console.log("");
@@ -180,7 +169,7 @@ const server = http.createServer(function (req, res) {
 
 
 
-      //-- Comprobamos si la direccion y tarjeta es distinto de null
+      //-- Comprobamos valores para el pedido
     if ((direccion != null) && (tarjeta != null)){
       //-- Añadirlos al pedido
       let pedido = {"usuario" : user,
@@ -195,7 +184,7 @@ const server = http.createServer(function (req, res) {
       let mytienda = JSON.stringify(tienda, null, 4);
 
       //-- Guardarla en el fichero destino
-      console.log("añadiendo pedido")
+      // console.log("añadiendo pedido")
       fs.writeFileSync(FICHERO_JSON_OUT, mytienda);
     };
 
@@ -208,10 +197,8 @@ const server = http.createServer(function (req, res) {
 
       if (user) {
           content = MAIN.replace('<li><a href="/login">Login</a></li>','<a href="/checkout">' + user + ' Cart</a>');
-          main_pag = content;
       }else{
           content = MAIN;
-          main_pag = content;
       }
 
     }else if (myURL.pathname == '/product1'){
@@ -338,7 +325,7 @@ const server = http.createServer(function (req, res) {
       content = CHECKOUT_OK
     }else if (myURL.pathname == '/products'){
 
-      console.log("Peticion de Productos!")
+      // console.log("Peticion de Productos!")
       content_type = mime_type["json"];
   
       //-- Leer los parámetros
@@ -347,7 +334,7 @@ const server = http.createServer(function (req, res) {
       //-- Convertimos los caracteres alphanumericos en string
       param1 = param1.toUpperCase();
   
-      console.log("  Param: " +  param1);
+      // console.log("  Param: " +  param1);
 
       let result = [];
 
@@ -365,18 +352,48 @@ const server = http.createServer(function (req, res) {
           }
       }
       //-- Imprimimos el aray de resultado de busquedas
-      console.log(result);
+      // console.log(result);
       busqueda = result;
       //-- Pasamos el resultado a formato JSON con stringify
       content = JSON.stringify(result);
 
+    }else if (myURL.pathname == '/search'){
 
+      console.log("buscando")
+      product1 = ['Iron Maiden']
+      product2 = ['Chicago Bulls']
+      product3 = ['Led Zeppelin']
 
+      if (busqueda[0] == null){
+        content = ERROR
+      }else{
+        if(product1.includes(busqueda[0])){
+          if (user) {
+            content = PRODUCT1.replace('<li><a href="/login">Login</a></li>','<a href="/checkout">' + user + ' Cart</a>')
+            content = content.replace('<h1></h1>','<h2><a id="buy" href="/product1/add">BUY</a></h2>')
+          }else{
+              content = PRODUCT1;
+          }
+        }else if (product2.includes(busqueda[0])){
+          if (user) {
+            content = PRODUCT2.replace('<li><a href="/login">Login</a></li>','<a href="/checkout">' + user + ' Cart</a>')
+            content = content.replace('<h1></h1>','<h2><a id="buy" href="/product2/add">BUY</a></h2>')
+          }else{
+              content = PRODUCT1;
+          }
+        }else if (product3.includes(busqueda[0])){
+          if (user) {
+            content = PRODUCT3.replace('<li><a href="/login">Login</a></li>','<a href="/checkout">' + user + ' Cart</a>')
+            content = content.replace('<h1></h1>','<h2><a id="buy" href="/product3/add">BUY</a></h2>')
+          }else{
+              content = PRODUCT3;
+          }
+        }else{
+          content = ERROR
+        }
+      }
 
-
-
-
-
+ 
 
 
 
@@ -385,24 +402,19 @@ const server = http.createServer(function (req, res) {
 
         extension = myURL.pathname.split('.')[1]
         path = myURL.pathname.split('/');
-        console.log(path)
         if (path.length > 2) {
           file = path[path.length-1]
           if (path.length == 3){
             if (path[1].startsWith('product')){
               filename = "./tienda/" + file
-              console.log(filename)
             }else{
               filename = "./tienda/" + path[1] + '/' + file
-              console.log(filename)
             }
           }else{
             filename = "./tienda/" + path[2] + '/' + file
-            console.log(filename)
           }
         }else{
           filename = "./tienda/" + myURL.pathname.split('/')[1];
-          console.log(filename)
         }
 
         fs.readFile(filename, (err, data) => {

@@ -45,9 +45,8 @@ caja.oninput = () => {
 
             } else {
                 //-- Hay un error en la petición
-                //-- Lo notificamos en la consola y en la propia web
+                //-- Lo notificamos en la consola
                 console.log("Error en la petición: " + m.status + " " + m.statusText);
-                // display2.innerHTML += '<p>ERROR</p>'
             }
         }
     }

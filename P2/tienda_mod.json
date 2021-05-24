@@ -56,26 +56,11 @@
             },
             {
                 "usuario": "root",
-                "direccion": "Madrid 10",
-                "tarjeta": "12345",
-                "carrito": [
-                    {
-                        "producto": "Led Zeppelin",
-                        "unidades": 1
-                    }
-                ]
-            },
-            {
-                "usuario": "root",
                 "direccion": "Madrid 101",
-                "tarjeta": "12345",
+                "tarjeta": "54321",
                 "carrito": [
                     {
-                        "producto": "Led Zeppelin",
-                        "unidades": 2
-                    },
-                    {
-                        "producto": "Iron Maiden",
+                        "producto": "Chicago Bulls",
                         "unidades": 1
                     }
                 ]
