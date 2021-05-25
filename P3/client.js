@@ -10,6 +10,8 @@ const msg_entry = document.getElementById('msg_entry'); //Mensaje del usuario
 const user = document.getElementById('name'); // Usuario: Nombre
 const register = document.getElementById('register'); // Boton de registro
 const send = document.getElementById('send'); // Boton de envio de mensaje
+const line = document.getElementById('line');
+
 
 //-- Crear un websocket. Se establece la conexión con el servidor
 const socket = io();
@@ -47,6 +49,7 @@ user.onkeydown = (ev) => {
 
 // Mensaje hacia el servidor, indicando que el nick ya esta siendo usado
 socket.on('used', (msg) => {
+    console.log(msg)
     line.innerHTML = msg;
     console.log("Nick already used.")
 })
@@ -58,15 +61,14 @@ socket.on('welcome', (msg) => {
     // Funcion para ocultar panel de registro y mostrar el chat
     $(document).ready(function () {
         $('#register-panel').hide();
+        $('#line').hide();
         $('#chat').show();
     })
     display.innerHTML = '> ' + msg;
 })
 
 socket.on('msg', (msg) => {
-    console.log("Welcome: 2222")
-  
-    content = '# ' + msg + '<br>' + display.innerHTML;
+    content = '> ' + msg + '<br>' + display.innerHTML;
     display.innerHTML = content;
 })
 
