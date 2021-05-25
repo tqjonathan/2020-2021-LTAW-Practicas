@@ -59,12 +59,13 @@ io.on('connect', (socket) => {
           users += 1;
           names[socket.id] = msg;
           socket.emit('welcome', '<strong>Server</strong>: Welcome, ' + msg);
-        } else {
+        }else{
           console.log('Nick: '.green + msg.red + ' already used'.green);
           socket.emit('used', 'Nick <strong>' + msg + '</strong> is already used');
         }
     })
 
+	// ************* Evento de desconexión del cliente *****************
 	socket.on('disconnect', function(){
 		if (names[socket.id]){
 			console.log(names[socket.id].red + ' leaves the chat'.green);
@@ -72,7 +73,7 @@ io.on('connect', (socket) => {
 			io.emit('msg', '<strong>Server</strong>: ' + names[socket.id] + ' leaves the chat');
 			delete names[socket.id];
 		}
-	  });
+	});
   
 });
 

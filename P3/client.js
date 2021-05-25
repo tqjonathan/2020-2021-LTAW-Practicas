@@ -1,7 +1,7 @@
 // Init para ocultar chat hasta el registro del usuario.
 function init () {
     $(document).ready(function () {
-      $('#chat').hide()
+        $('#chat').hide()
     });
 }
                                                                                                                                                           
@@ -44,17 +44,16 @@ user.onkeydown = (ev) => {
     }
 }
 
-// ****************************************
 
 
-// Mensaje hacia el servidor, indicando que el nick ya esta siendo usado
+// ******** NICK EXISTENTE *************
 socket.on('used', (msg) => {
     console.log(msg)
     line.innerHTML = msg;
     console.log("Nick already used.")
 })
 
-// Mensaje hacia el servidor, indicando que el usuario ha sido aceptado
+// **** USUARIO ACEPTADO POR EL SERVIDOR*********
 
 socket.on('welcome', (msg) => {
     console.log("Welcome: " + user.value)
@@ -68,9 +67,40 @@ socket.on('welcome', (msg) => {
 })
 
 
-// Mensaje welcome recibido del Server
+// Mensaje recibido del server
 socket.on('msg', (msg) => {
     content = '> ' + msg + '<br>' + display.innerHTML;
     display.innerHTML = content;
 })
 
+
+send.onclick = () => {
+    console.log("333333333333333")
+  
+        if (msg.value){
+            if (msg.value[0] == '/') {
+                socket.emit('cmd', msg.value);
+            } else {
+                socket.emit('msg', msg.value);
+            }
+        }
+    msg.value = '';
+}
+    
+msg.onkeydown = (ev) => {
+    console.log("4444444444444444444")
+  
+    switch (ev.keyCode) {
+        case 13: // enter
+            if (msg.value){
+                if (msg.value[0] == '/') {
+                    socket.emit('cmd', msg.value);
+                } else {
+                    socket.emit('msg', msg.value);
+                }
+            }
+            msg.value = '';
+        break;
+      }
+  }
+    
