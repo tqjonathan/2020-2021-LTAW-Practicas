@@ -67,6 +67,8 @@ socket.on('welcome', (msg) => {
     display.innerHTML = '> ' + msg;
 })
 
+
+// Mensaje welcome recibido del Server
 socket.on('msg', (msg) => {
     content = '> ' + msg + '<br>' + display.innerHTML;
     display.innerHTML = content;

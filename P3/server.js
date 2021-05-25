@@ -43,11 +43,7 @@ app.get('/', (req,res) => {
 //-- biblioteca socket.io para el cliente
 app.use('/', express.static(__dirname +'/'));
 
-
-
 // *********
-
-
 
 io.on('connect', (socket) => {
   
@@ -59,19 +55,25 @@ io.on('connect', (socket) => {
         if (isWelcome(msg)) {
           console.log(msg.red + ' joins the chat'.green);
           io.emit('msg','<strong>server</strong>: ' + msg + ' joins the chat');
+          // Incrementamos el numero de usuarios conectados
           users += 1;
           names[socket.id] = msg;
           socket.emit('welcome', '<strong>Server</strong>: Welcome, ' + msg);
         } else {
           console.log('Nick: '.green + msg.red + ' already used'.green);
-          socket.emit('used', 'Nick ' + "<strong>"+msg+"</strong>" + ' is already used');
+          socket.emit('used', 'Nick <strong>' + msg + '</strong> is already used');
         }
     })
 
-
-    //-- Incrementamos el numero de usuarios conectados
-    num_user += 1;
-
+	socket.on('disconnect', function(){
+		if (names[socket.id]){
+			console.log(names[socket.id].red + ' leaves the chat'.green);
+			users -= 1;
+			io.emit('msg', '<strong>Server</strong>: ' + names[socket.id] + ' leaves the chat');
+			delete names[socket.id];
+		}
+	  });
+  
 });
 
 //-- Lanzar el servidor HTTP

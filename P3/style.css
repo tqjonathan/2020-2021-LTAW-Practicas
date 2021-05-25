@@ -9,12 +9,16 @@ body{
     height: 8%;
 }
 
-#name, #register {
+#name, #register{
     font-size: 150%;
 }
-  
+
+#register-panel{
+    padding-top: 5%;
+}
+
 #chat{
-    background-color: rgba(113, 152, 216, 0.63); 
+    background-color: rgba(113, 152, 216, 0.63);
     border-radius: 15px;
     padding-top:5px;
     padding-bottom: 10px;
@@ -35,4 +39,10 @@ body{
     width: 600px;
     height: 400px;
     overflow: auto;
+}
+
+
+#line {
+    font-family: Cairo;
+    font-size: 150%;
 }
