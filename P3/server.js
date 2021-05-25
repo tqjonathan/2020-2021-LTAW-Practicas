@@ -15,21 +15,35 @@ const io = socket(server);
 
 const PUERTO = 9000;
 
-//variables
-
+// ******** VARIABLES *********
 var user = 0;
+
+// *************************************
+
 
 
 // ****** MENSAJES DEL SERVER **********
 
+    // Por añadir
+
+
 // *************************************
+
+
+
 
 
 // ****** PUNTOS DE ENTRADA DE LA APLICACION WEB **********
 
 //-- Definir el punto de entrada principal de mi aplicación web
-app.get('/', (req, res) => {
+app.get('/', (res) => {
     res.sendFile(__dirname + '/index.html');
     console.log("Solicitado acceso al chat");
-  });
+});
+
+//-- Esto es necesario para que el servidor le envíe al cliente la
+//-- biblioteca socket.io para el cliente
+app.use('/', express.static(__dirname +'/'));
+
+
 
