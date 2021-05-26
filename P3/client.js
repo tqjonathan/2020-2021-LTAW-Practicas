@@ -76,11 +76,7 @@ socket.on('msg', (msg) => {
 
 send.onclick = () => {
     if (msg.value){
-        if (msg.value[0] == '/') {
-            socket.emit('cmd', msg.value);
-        }else{
-            socket.emit('msg', msg.value);
-        }
+        socket.emit('msg', msg.value);
     }
     msg.value = '';
 }
@@ -89,11 +85,7 @@ msg.onkeydown = (ev) => {
     switch (ev.keyCode) {
         case 13:
             if (msg.value){
-                if (msg.value[0] == '/') {
-                    socket.emit('cmd', msg.value);
-                } else {
-                    socket.emit('msg', msg.value);
-                }
+                socket.emit('msg', msg.value);
             }
             msg.value = '';
         break;

@@ -15,9 +15,14 @@ const io = socket(server);
 
 const PUERTO = 9009;
 
+
+const tiempo = Date.now();
+const fecha = new Date(tiempo);
+
 // ******** VARIABLES *********
 var users = 0;
 var names = {};
+
 
 // *************************************
 
@@ -25,7 +30,18 @@ var names = {};
 
 // ****** MENSAJES DEL SERVER **********
 
-    // Por añadir
+let help_msg = ("Los comandos soportados son los siguientes:<br>" +
+                "> <b>'/help'</b>: Mostrar los comandos soportados<br>" +
+                "> <b>'/list'</b>: Mostrar numero de usuarios conectados<br>" +
+                "> <b>'/hello'</b>: El servidor te saluda<br>" +
+                "> <b>'/date'</b>: Mostrar la fecha actual<br>");
+
+let hello_msg = ("¡HOLA! Gracias por unirte al chat, espero que disfrutes");
+
+let date_msg = ("Fecha actual: <b>" + fecha.toUTCString()+ "</b>");
+
+let error_msg = ("Comando no reconocido");
+
 
 
 // *************************************
@@ -78,7 +94,13 @@ io.on('connect', (socket) => {
 	socket.on('msg', (msg) => {
 		console.log(names[socket.id].red + ": " + msg.blue);
 		//-- Reenviarlo a todos los clientes conectados
-		io.emit('msg', '<strong>' + names[socket.id] + '</strong>: ' + msg);
+		if (msg.startsWith('/')) {
+			console.log("Recurso recibido!: " + msg.red);
+			data = check_command(msg);
+			socket.emit('msg', data)
+		}else{
+			io.emit('msg', '<strong>' + names[socket.id] + '</strong>: ' + msg);
+		}
 	});
   
 });
@@ -98,4 +120,26 @@ function isWelcome(nick) {
     }
     return accepted;
 }
+
+function check_command(msg){
+	let data;
+	if(msg == '/help'){
+		console.log('> Mostrar Comandos soportados');
+		data = help_msg;
+	}else if(msg == '/list'){
+		console.log('> Numero de usuarios conectados');
+		data = users.toString() + ' usarios conectados'
+		// data = list_msg + num_user;
+	}else if(msg == '/hello'){
+		console.log('> Servidor  devuelve el saludo');
+		data = hello_msg;
+	}else if(msg == '/date'){
+		console.log('> Mostrar la fecha');
+		data = date_msg;
+	}else{
+		console.log('> Comando no reconocido');
+		data = error_msg;
+	};
+	return(data);
+  };
   
