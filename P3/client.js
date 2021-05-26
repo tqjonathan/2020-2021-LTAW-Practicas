@@ -6,7 +6,7 @@ function init () {
 }
                                                                                                                                                           
 const display = document.getElementById('display'); // Display chat
-const msg_entry = document.getElementById('msg_entry'); //Mensaje del usuario
+const msg = document.getElementById('msg'); //Mensaje del usuario
 const user = document.getElementById('name'); // Usuario: Nombre
 const register = document.getElementById('register'); // Boton de registro
 const send = document.getElementById('send'); // Boton de envio de mensaje
@@ -75,23 +75,19 @@ socket.on('msg', (msg) => {
 
 
 send.onclick = () => {
-    console.log("333333333333333")
-  
-        if (msg.value){
-            if (msg.value[0] == '/') {
-                socket.emit('cmd', msg.value);
-            } else {
-                socket.emit('msg', msg.value);
-            }
+    if (msg.value){
+        if (msg.value[0] == '/') {
+            socket.emit('cmd', msg.value);
+        }else{
+            socket.emit('msg', msg.value);
         }
+    }
     msg.value = '';
 }
     
 msg.onkeydown = (ev) => {
-    console.log("4444444444444444444")
-  
     switch (ev.keyCode) {
-        case 13: // enter
+        case 13:
             if (msg.value){
                 if (msg.value[0] == '/') {
                     socket.emit('cmd', msg.value);
@@ -101,6 +97,6 @@ msg.onkeydown = (ev) => {
             }
             msg.value = '';
         break;
-      }
-  }
+    }
+}
     

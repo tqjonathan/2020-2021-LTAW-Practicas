@@ -54,7 +54,7 @@ io.on('connect', (socket) => {
 
         if (isWelcome(msg)) {
           console.log(msg.red + ' joins the chat'.green);
-          io.emit('msg','<strong>server</strong>: ' + msg + ' joins the chat');
+          io.emit('msg','<strong>Server</strong>: ' + msg + ' joins the chat');
           // Incrementamos el numero de usuarios conectados
           users += 1;
           names[socket.id] = msg;
@@ -73,6 +73,12 @@ io.on('connect', (socket) => {
 			io.emit('msg', '<strong>Server</strong>: ' + names[socket.id] + ' leaves the chat');
 			delete names[socket.id];
 		}
+	});
+
+	socket.on('msg', (msg) => {
+		console.log(names[socket.id].red + ": " + msg.blue);
+		//-- Reenviarlo a todos los clientes conectados
+		io.emit('msg', '<strong>' + names[socket.id] + '</strong>: ' + msg);
 	});
   
 });
