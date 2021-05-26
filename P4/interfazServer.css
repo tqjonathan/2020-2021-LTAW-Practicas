@@ -1,0 +1,37 @@
+body{
+    background-image: url(background.jpg);
+    /* text-align: center; */
+    /* margin-top: 50px; */
+}
+
+h1 {
+    width: 93%;
+    padding: 20px;
+    background-color: rgb(3, 3, 3);
+    margin: auto;
+    border-radius: 10px;
+    color: white;
+    text-align: center;
+  }
+
+
+
+#display {
+    border: 2px solid black;
+    border-radius: 15px;
+    background-color: white;
+    padding: 10px;
+}
+
+
+.row{
+    display: flex;
+    align-items: left;
+    margin-left: 50px;
+    margin-right: 50px;
+}
+
+.col{
+    flex: 30%;
+    min-width: 250px;
+}
