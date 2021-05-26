@@ -7,13 +7,13 @@ const colors = require('colors');
 //-- Crear una nueva aplciacion web
 const app = express();
 
-//-- Crear un servidor, asosiaco a la App de express
+//-- Crear un servidor, asosiado a la App de express
 const server = http.Server(app);
 
 //-- Crear el servidor de websockets, asociado al servidor http
 const io = socket(server);
 
-const PUERTO = 9009;
+const PUERTO = 9000;
 
 
 const tiempo = Date.now();
@@ -30,11 +30,11 @@ var names = {};
 
 // ****** MENSAJES DEL SERVER **********
 
-let help_msg = ("Los comandos soportados son los siguientes:<br>" +
-                "> <b>'/help'</b>: Mostrar los comandos soportados<br>" +
-                "> <b>'/list'</b>: Mostrar numero de usuarios conectados<br>" +
-                "> <b>'/hello'</b>: El servidor te saluda<br>" +
-                "> <b>'/date'</b>: Mostrar la fecha actual<br>");
+let help_msg = ("Comandos Soportados:<br>" +
+                "> <b>'/help'</b>: Devuelve la lista de los comandos soportados<br>" +
+                "> <b>'/list'</b>: Devuelve el numero de usuarios conectados<br>" +
+                "> <b>'/hello'</b>: Devuelve el saludo del servidor<br>" +
+                "> <b>'/date'</b>: Devuelve la fecha actual<br>");
 
 let hello_msg = ("¡HOLA! Gracias por unirte al chat, espero que disfrutes");
 
@@ -43,23 +43,45 @@ let date_msg = ("Fecha actual: <b>" + fecha.toUTCString()+ "</b>");
 let error_msg = ("Comando no reconocido");
 
 
+// Funciones utiles:
 
-// *************************************
+function isWelcome(nick) {
 
+    let accepted = true;
+    for (let id in names) {
+      if (nick.toLowerCase() == names[id].toLowerCase()) {
+        accepted = false;
+      }
+    }
+    return accepted;
+}
 
-// ****** PUNTOS DE ENTRADA DE LA APLICACION WEB **********
+function check_command(msg){
+	let data;
+	if(msg == '/help'){
+		data = help_msg;
+	}else if(msg == '/list'){
+		data = users.toString() + ' usarios conectados'
+	}else if(msg == '/hello'){
+		data = hello_msg;
+	}else if(msg == '/date'){
+		data = date_msg;
+	}else{
+		data = error_msg;
+	};
+	return(data);
+  };
+  
 
 //-- Definir el punto de entrada principal de mi aplicación web
 app.get('/', (req,res) => {
     res.sendFile(__dirname + '/index.html');
-    console.log("Solicitado acceso al chat");
 });
 
 //-- Esto es necesario para que el servidor le envíe al cliente la
 //-- biblioteca socket.io para el cliente
 app.use('/', express.static(__dirname +'/'));
 
-// *********
 
 io.on('connect', (socket) => {
   
@@ -91,9 +113,9 @@ io.on('connect', (socket) => {
 		}
 	});
 
+	// Mensajes recibidos de clientes
 	socket.on('msg', (msg) => {
 		console.log(names[socket.id].red + ": " + msg.blue);
-		//-- Reenviarlo a todos los clientes conectados
 		if (msg.startsWith('/')) {
 			console.log("Recurso recibido!: " + msg.red);
 			data = check_command(msg);
@@ -102,44 +124,9 @@ io.on('connect', (socket) => {
 			io.emit('msg', '<strong>' + names[socket.id] + '</strong>: ' + msg);
 		}
 	});
-  
 });
 
 //-- Lanzar el servidor HTTP
 
 server.listen(PUERTO);
 console.log("Escuchando en puerto: " + PUERTO);
-
-function isWelcome(nick) {
-
-    let accepted = true;
-    for (let id in names) {
-      if (nick.toLowerCase() == names[id].toLowerCase()) {
-        accepted = false;
-      }
-    }
-    return accepted;
-}
-
-function check_command(msg){
-	let data;
-	if(msg == '/help'){
-		console.log('> Mostrar Comandos soportados');
-		data = help_msg;
-	}else if(msg == '/list'){
-		console.log('> Numero de usuarios conectados');
-		data = users.toString() + ' usarios conectados'
-		// data = list_msg + num_user;
-	}else if(msg == '/hello'){
-		console.log('> Servidor  devuelve el saludo');
-		data = hello_msg;
-	}else if(msg == '/date'){
-		console.log('> Mostrar la fecha');
-		data = date_msg;
-	}else{
-		console.log('> Comando no reconocido');
-		data = error_msg;
-	};
-	return(data);
-  };
-  

@@ -5,11 +5,11 @@ function init () {
     });
 }
                                                                                                                                                           
-const display = document.getElementById('display'); // Display chat
-const msg = document.getElementById('msg'); //Mensaje del usuario
-const user = document.getElementById('name'); // Usuario: Nombre
-const register = document.getElementById('register'); // Boton de registro
-const send = document.getElementById('send'); // Boton de envio de mensaje
+const display = document.getElementById('display');
+const msg = document.getElementById('msg'); 
+const user = document.getElementById('name');
+const register = document.getElementById('register');
+const send = document.getElementById('send'); 
 const line = document.getElementById('line');
 
 
@@ -21,7 +21,6 @@ const socket = io();
     // ********Mediante el boton JOIN*********
 register.onclick = () => {
     if (user.value) {
-        // Mensaje al server, con nombre de usuario.
         socket.emit('init', user.value);
         console.log("Nuevo usuario: " + user.value)
 
@@ -43,8 +42,6 @@ user.onkeydown = (ev) => {
         break;
     }
 }
-
-
 
 // ******** NICK EXISTENTE *************
 socket.on('used', (msg) => {
@@ -74,6 +71,7 @@ socket.on('msg', (msg) => {
 })
 
 
+// Envio de mensajes al servidor (Enter + Click)
 send.onclick = () => {
     if (msg.value){
         socket.emit('msg', msg.value);
