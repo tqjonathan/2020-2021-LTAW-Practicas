@@ -1,44 +1,17 @@
-// //-- Cargar las dependencias
-// const socket = require('socket.io');
-// const http = require('http');
-// const express = require('express');
-// const colors = require('colors');
-
-// const electron = require('electron');
-const ip = require('ip');
-// const process = require('process');
-//-- Cargar el módulo de electron
-const electron = require('electron');
 //-- Cargar las dependencias
+const ip = require('ip');
+const electron = require('electron');
 const express = require('express');
 const app = express();
 const http = require('http').Server(app);
 const io = require('socket.io')(http);
 const colors = require('colors');
-// const PUERTO = 8080;
-
-
-
-
-
-//-- Crear una nueva aplciacion web
-// const app = express();
-
 
 //-- Variable para acceder a la ventana principal
 //-- Se pone aquí para que sea global al módulo principal
 let win = null;
 
-
-//-- Crear un servidor, asosiado a la App de express
-// const server = http.Server(app);
-
-//-- Crear el servidor de websockets, asociado al servidor http
-// const io = socket(server);
-
 const PUERTO = 9000;
-
-
 const tiempo = Date.now();
 const fecha = new Date(tiempo);
 
@@ -60,9 +33,7 @@ let date_msg = ("Fecha actual: <b>" + fecha.toUTCString()+ "</b>");
 
 let error_msg = ("Comando no reconocido");
 
-
 // Funciones utiles:
-
 function isWelcome(nick) {
 
     let accepted = true;
@@ -158,9 +129,7 @@ electron.app.on('ready', () => {
 		});
 	});
 
-//-- Lanzar el servidor HTTP
-
-	//-- Crear la ventana principal de nuestra aplicación
+	//-- Crear la ventana principal de la aplicación
 	win = new electron.BrowserWindow({
 		width: 1920,   //-- Anchura 
 		height: 1080,  //-- Altura
@@ -175,11 +144,9 @@ electron.app.on('ready', () => {
 	//-- Cargar interfaz gráfica en HTML
 	win.loadFile("index.html");
 
-    //-- Esperar a recibir los mensajes de botón apretado (Test) del proceso de 
-    //-- renderizado. Al recibirlos se escribe una cadena en la consola
+    //-- Esperar a recibir los mensajes de botón de prueba
     electron.ipcMain.handle('test', (event, msg) => {
 		console.log("-> Mensaje: " + msg);
 		io.send("-> Mensaje: " + msg);
     });
-
 });
